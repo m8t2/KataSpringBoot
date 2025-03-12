@@ -2,9 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +33,12 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public String createUser(@ModelAttribute("user") User user) {
+    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            List<User> users = userService.findAllUsers();
+            model.addAttribute("users", users);
+            return "index";
+        }
         userService.addUser(user);
         return "redirect:/";
     }
@@ -53,7 +60,10 @@ public class UserController {
     }
 
     @PostMapping("/edit")
-    public String updateUser(@ModelAttribute("user") User user) {
+    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult result) {
+        if (result.hasErrors()) {
+            return "update";
+        }
         userService.updateUser(user);
         return "redirect:/";
     }

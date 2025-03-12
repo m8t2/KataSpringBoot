@@ -6,6 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -16,12 +20,18 @@ public class User {
     private Long id;
 
     @Column
+    @Min(value = 1, message = "Возраст должен быть не меньше 1")
+    @Max(value = 120, message = "Возраст не может быть больше 120")
     private int age;
 
     @Column
+    @NotEmpty(message = "Имя не может быть пустым")
+    @Size(min = 2, max = 50, message = "Имя должно быть от 2 до 50 символов")
     private String name;
 
     @Column
+    @NotEmpty(message = "Фамилия не может быть пустой")
+    @Size(min = 2, max = 50, message = "Фамилия должна быть от 2 до 50 символов")
     private String secondName;
 
     public User() {
